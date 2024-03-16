@@ -18,7 +18,7 @@ export default function HomePage() {
       <main className='flex justify-center items-center md:h-screen p-8 md:px-16'>
         <div className='flex flex-col md:flex-row gap-12 920px:gap-24 items-center'>
           <div className='flex flex-col gap-8'>
-            <h1 className={font.className + ' text-4xl'}>Open Session on your Apple Watch</h1>
+            <h1 className={font.className + ' text-4xl font-semibold'}>Open Session on your Apple Watch</h1>
             <p className='max-w-xl text-balance'>First Session messenger client that runs on WatchOS. Send and receive messages like in movies. No companion app required, everything runs inside your watches.</p>
             <div className={font.className + ' flex gap-4 font-bold flex-wrap'}>
               <button className={btn + ' bg-brand text-black'}>
