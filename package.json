@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db": "redis-server --save \"\" --appendonly no"
   },
   "dependencies": {
     "lucide-react": "^0.358.0",
@@ -15,7 +16,8 @@
     "qrcode": "^1.5.3",
     "react": "^18",
     "react-dom": "^18",
-    "react-icons": "^5.0.1"
+    "react-icons": "^5.0.1",
+    "redis": "^4.6.13"
   },
   "devDependencies": {
     "@types/node": "^20",

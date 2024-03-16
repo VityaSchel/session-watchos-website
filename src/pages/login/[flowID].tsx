@@ -8,7 +8,8 @@ import { Loader2 } from 'lucide-react'
 import { base64ToUint8Array } from '@/shared/base64'
 import { SubmitLoginFlowResponse } from '@/pages/api/login-flow-result/[flowID]'
 import { GetServerSidePropsContext } from 'next'
-import { flows } from '@/app/db'
+import { getFlow } from '@/app/db'
+import { useRouter } from 'next/router'
 
 const font = Public_Sans({
   weight: ['400', '600', '700'],
@@ -69,6 +70,7 @@ function ErrorMessage() {
 function LoginForm({ encryptionKey }: {
   encryptionKey: { iv: Uint8Array, key: CryptoKey }
 }) {
+  const { flowID } = useRouter().query
   const [phrase, setPhrase] = React.useState('')
   const words = React.useMemo(() => phrase.split(' ').filter(w => w !== ''), [phrase])
   const [sent, setSent] = React.useState(false)
@@ -78,9 +80,15 @@ function LoginForm({ encryptionKey }: {
     setSending(true)
     try {
       const encryptedContent = await encryptTextWithAES(phrase, encryptionKey.iv, encryptionKey.key)
-      const response = await fetch('/api/submit-login-flow', {
-        method: 'POST',
-        body: encryptedContent
+      let encodedContent = ''
+      new Uint8Array(encryptedContent)
+        .forEach((byte: number) => { encodedContent += String.fromCharCode(byte) })
+      const response = await fetch('/api/login-flow-result/' + flowID, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/octet-stream'
+        },
+        body: btoa(encodedContent)
       })
         .then(res => res.json() as Promise<SubmitLoginFlowResponse>)
       if (response.ok) {
@@ -152,7 +160,7 @@ function LoginForm({ encryptionKey }: {
               Am I just sending you my mnemonic phrase? Is this secure?
             </h2>
             <p className={font.className + ' text-sm font-normal'}>
-              See that tiny # character in your address bar? It&apos;s called URL fragment and what follows it — is a decryption key, which was generated along with qr code on your device. When you press Continue, this key is used to encrypt your mnemonic phrase and this gibberish is sent back to your watches where the same key is used to decrypt it.<br></br><br></br>Basically, your browser sends encrypted mnemonic so we can&apos;t read it, then your watches turn it back. It&apos;s that simple and works on AES-256 symmetric encryption. Your mnemonic phrase never leaves your devices without encryption.
+              See that tiny # character in your address bar? It&apos;s called URL fragment and what follows it — is a decryption key, which was generated along with qr code on your device. When you press Continue, this key is used to encrypt your mnemonic phrase and this gibberish is sent back to your watches where the same key is used to decrypt it.<br></br><br></br>Basically, your browser sends encrypted mnemonic so we can&apos;t read it, then your watches turn it back. It&apos;s that simple and works on AES-256 symmetric encryption. Your mnemonic phrase never leaves your devices unencrypted.
             </p>
           </div>
         </>)}
@@ -169,8 +177,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       notFound: true
     }
   }
-  console.log(Array.from(flows.entries()))
-  if(!flows.has(flowID)) {
+  if(await getFlow(flowID) === null) {
     return {
       notFound: true
     }
