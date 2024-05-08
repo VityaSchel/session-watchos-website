@@ -125,7 +125,7 @@ function LoginForm({ encryptionKey }: {
                 value={phrase}
                 disabled={sending}
                 placeholder='Mnemonic phrase' 
-                maxLength={32 * 12}
+                maxLength={32 * 13}
                 onChange={e => {
                   const value = e.target.value
                     .toLowerCase()
@@ -137,16 +137,16 @@ function LoginForm({ encryptionKey }: {
                         if (i === words.length-1 || word !== '') return true
                         else return false
                       })
-                      .slice(0, 12)
+                      .slice(0, 13)
                       .join(' ')
                   )
                 }}
               />
-              <span className='font-mono tabular-nums'>{words.length}/12</span>
+              <span className='font-mono tabular-nums'>{words.length}/13</span>
             </div>
             <button 
               className={btn + ' bg-brand disabled:bg-neutral-400 text-black disabled:text-neutral-700 transition-colors'} 
-              disabled={sending || words.length < 12} 
+              disabled={sending || words.length < 13} 
               onClick={handleSend}
             >
               Continue {sending 

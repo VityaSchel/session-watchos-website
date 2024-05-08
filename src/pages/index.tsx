@@ -4,6 +4,7 @@ import { Public_Sans } from 'next/font/google'
 import { TiArrowRight } from 'react-icons/ti'
 import { FaGithub } from 'react-icons/fa'
 import { Footer } from '@/widgets/footer'
+import Link from 'next/link'
 
 const font = Public_Sans({
   weight: ['600','700'],
@@ -21,12 +22,16 @@ export default function HomePage() {
             <h1 className={font.className + ' text-4xl font-semibold'}>Open Session on your Apple Watch</h1>
             <p className='max-w-xl text-balance'>First Session messenger client that runs on WatchOS. Send and receive messages like in movies. No companion app required, everything runs inside your watches.</p>
             <div className={font.className + ' flex gap-4 font-bold flex-wrap'}>
-              <button className={btn + ' bg-brand text-black'}>
-                Download <TiArrowRight className='ml-1 text-2xl' />
-              </button>
-              <button className={btn + ' bg-neutral-800'}>
-                <FaGithub className='mr-3' /> Open sources
-              </button>
+              <Link href='https://github.com/VityaSchel/session-watchos/Releases' className='rounded-full'>
+                <button className={btn + ' bg-brand text-black'} tabIndex={-1}>
+                  Download <TiArrowRight className='ml-1 text-2xl' />
+                </button>
+              </Link>
+              <Link href='https://github.com/VityaSchel/session-watchos' className='rounded-full'>
+                <button className={btn + ' bg-neutral-800'} tabIndex={-1}>
+                  <FaGithub className='mr-3' /> Open sources
+                </button>
+              </Link>
             </div>
           </div>
           <div className='screenshot-mask relative aspect-[241/268] h-[282px] w-auto'>
